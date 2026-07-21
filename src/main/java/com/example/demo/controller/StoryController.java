@@ -10,6 +10,7 @@ import com.example.demo.repository.StoryRepository;
 import com.example.demo.service.LoginService;
 import com.example.demo.tables.Login;
 import com.example.demo.tables.Story;
+import com.example.demo.util.JwtUtil;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,14 +26,22 @@ public class StoryController {
     @Autowired
     private LoginService loginService;
 
+    @Autowired
+    private JwtUtil jwtUtil;
+
     private Login getAuthenticatedUser(String authHeader) {
-        if (authHeader == null || !authHeader.startsWith("Bearer dummy-token-for-")) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             return null;
         }
         try {
-            Long userId = Long.parseLong(authHeader.substring("Bearer dummy-token-for-".length()));
-            return loginService.getUserById(userId);
+            String token = authHeader.substring(7);
+            Long userId = jwtUtil.getUserIdFromToken(token);
+            if (userId != null) {
+                return loginService.getUserById(userId);
+            }
+            return null;
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }

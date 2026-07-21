@@ -9,6 +9,7 @@ import com.example.demo.dto.AuthRequest;
 import com.example.demo.dto.AuthResponse;
 import com.example.demo.service.LoginService;
 import com.example.demo.tables.Login;
+import com.example.demo.util.JwtUtil;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -17,15 +18,18 @@ public class LoginController {
     @Autowired
     private LoginService service;
 
+    @Autowired
+    private JwtUtil jwtUtil;
+
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody Login login) {
         // Plain text password for simplicity without JWT/Security
         login.setConfirmpassword(login.getPassword());
         Login savedUser = service.register(login);
         
-        // Dummy token
-        String dummyToken = "dummy-token-for-" + savedUser.getId();
-        return ResponseEntity.ok(new AuthResponse(dummyToken, savedUser.getId(), savedUser.getUsername(), savedUser.getEmail()));
+        // Real JWT token
+        String jwtToken = jwtUtil.generateToken(savedUser.getId());
+        return ResponseEntity.ok(new AuthResponse(jwtToken, savedUser.getId(), savedUser.getUsername(), savedUser.getEmail()));
     }
 
     @PostMapping("/login")
@@ -33,9 +37,9 @@ public class LoginController {
         Login user = service.getUserByEmail(request.getEmail());
         
         if (user != null && user.getPassword().equals(request.getPassword())) {
-            // Dummy token
-            String dummyToken = "dummy-token-for-" + user.getId();
-            return ResponseEntity.ok(new AuthResponse(dummyToken, user.getId(), user.getUsername(), user.getEmail()));
+            // Real JWT token
+            String jwtToken = jwtUtil.generateToken(user.getId());
+            return ResponseEntity.ok(new AuthResponse(jwtToken, user.getId(), user.getUsername(), user.getEmail()));
         }
         
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
