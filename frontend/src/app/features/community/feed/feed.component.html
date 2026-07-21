@@ -1,0 +1,44 @@
+<div class="community-feed">
+  <div class="feed-header">
+    <h1>Story Library</h1>
+    <p>Discover AI-generated narratives curated by the community.</p>
+    
+    <div class="category-tabs">
+      <button class="tab-btn active">Trending</button>
+      <button class="tab-btn">Most Liked</button>
+      <button class="tab-btn">Editor's Choice</button>
+      <button class="tab-btn">Latest</button>
+    </div>
+  </div>
+
+  <div class="masonry-grid">
+    <div class="story-card" *ngFor="let story of stories" [ngClass]="story.size">
+      <div class="card-cover" [style.background-image]="'url(' + story.coverImage + ')'">
+        <div class="card-overlay">
+          <div class="top-actions">
+            <span class="ai-badge"><i class="fa-solid fa-wand-magic-sparkles"></i> AI Generated</span>
+            <button class="icon-btn favorite" title="Favorite"><i class="fa-regular fa-heart"></i></button>
+          </div>
+          <div class="hover-actions">
+            <button class="action-btn primary" routerLink="/reader"><i class="fa-solid fa-book-open"></i> Read</button>
+            <button class="action-btn"><i class="fa-solid fa-clone"></i> Remix</button>
+            <button class="action-btn"><i class="fa-solid fa-share-nodes"></i> Share</button>
+          </div>
+        </div>
+      </div>
+      <div class="card-info">
+        <div class="meta-row">
+          <span class="genre">{{ story.genre }}</span>
+          <span class="read-time"><i class="fa-regular fa-clock"></i> {{ story.readTime }}</span>
+        </div>
+        <h3 class="title">{{ story.title }}</h3>
+        <div class="stats-row">
+          <span><i class="fa-solid fa-eye"></i> {{ story.views }}</span>
+          <span><i class="fa-solid fa-heart"></i> {{ story.likes }}</span>
+          <span><i class="fa-solid fa-comment"></i> {{ story.comments }}</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
