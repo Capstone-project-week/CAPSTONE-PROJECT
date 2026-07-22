@@ -46,7 +46,6 @@ public class Storyviews {
 	}
 	public Storyviews() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 }

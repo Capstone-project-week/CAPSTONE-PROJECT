@@ -9,7 +9,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 @Entity
@@ -91,7 +90,6 @@ public class Login {
 
 	public Login() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 }

@@ -10,6 +10,7 @@ import com.example.demo.repository.StoryRepository;
 import com.example.demo.service.LoginService;
 import com.example.demo.tables.Login;
 import com.example.demo.tables.Story;
+import com.example.demo.util.JwtUtil;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,14 +26,22 @@ public class StoryController {
     @Autowired
     private LoginService loginService;
 
+    @Autowired
+    private JwtUtil jwtUtil;
+
     private Login getAuthenticatedUser(String authHeader) {
-        if (authHeader == null || !authHeader.startsWith("Bearer dummy-token-for-")) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             return null;
         }
         try {
-            Long userId = Long.parseLong(authHeader.substring("Bearer dummy-token-for-".length()));
-            return loginService.getUserById(userId);
+            String token = authHeader.substring(7);
+            Long userId = jwtUtil.getUserIdFromToken(token);
+            if (userId != null) {
+                return loginService.getUserById(userId);
+            }
+            return null;
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -50,6 +59,9 @@ public class StoryController {
         return ResponseEntity.ok(dtos);
     }
 
+    @Autowired
+    private com.example.demo.service.n8nservice n8nService;
+
     @PostMapping
     public ResponseEntity<?> createStory(@RequestHeader(value = "Authorization", required = false) String authHeader, @RequestBody StoryDto request) {
         Login user = getAuthenticatedUser(authHeader);
@@ -60,7 +72,13 @@ public class StoryController {
         Story story = new Story();
         story.setTitle(request.getTitle());
         story.setPrompt(request.getPrompt());
-        story.setContent(request.getContent());
+        
+        String content = request.getContent();
+        if (content == null || content.trim().isEmpty()) {
+            content = n8nService.generateText(request.getPrompt());
+        }
+        story.setContent(content);
+        
         story.setUser(user);
         story.setCreatedAt(LocalDateTime.now());
         
