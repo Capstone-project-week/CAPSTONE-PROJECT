@@ -3,3 +3,6 @@ target/
 *.jar
 *.war
 .DS_Store
+
+# Ignore sensitive configuration files
+src/main/resources/application.properties
