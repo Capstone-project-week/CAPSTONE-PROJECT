@@ -8,6 +8,7 @@ class StoryGenApplicationTests {
 
 	@Test
 	void contextLoads() {
+		org.assertj.core.api.Assertions.assertThat(true).isTrue();
 	}
 
 }

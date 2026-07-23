@@ -9,17 +9,18 @@ import com.example.demo.tables.Login;
 @Service
 public class LoginService {
 @Autowired
-Loginrepository Repo;
+Loginrepository repo;
+
 public Login register(Login login) {
-    return Repo.save(login);
+    return repo.save(login);
 }
 
 public Login getUserById(Long id) {
-    return Repo.findById(id).orElse(null);
+    return repo.findById(id).orElse(null);
 }
 
 public Login getUserByEmail(String email) {
-    return Repo.findByEmail(email).orElse(null);
+    return repo.findByEmail(email).orElse(null);
 }
 
 }

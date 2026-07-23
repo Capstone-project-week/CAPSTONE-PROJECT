@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class n8nservice {
+public class N8nService {
 
 
 
@@ -37,20 +37,10 @@ public class n8nservice {
                 return "N8n Agent triggered successfully but returned an empty response. You might need to check your workflow configuration.";
             }
 
-            
             if (rawResponse.trim().startsWith("{")) {
-                try {
-                    
-                    org.springframework.boot.json.JsonParser parser = org.springframework.boot.json.JsonParserFactory.getJsonParser();
-                    Map<String, Object> jsonMap = parser.parseMap(rawResponse);
-                    
-                    if (jsonMap.containsKey("output")) {
-                        return String.valueOf(jsonMap.get("output"));
-                    } else if (jsonMap.containsKey("text")) {
-                        return String.valueOf(jsonMap.get("text"));
-                    }
-                } catch (Exception e) {
-                    
+                String extracted = extractJsonField(rawResponse);
+                if (extracted != null) {
+                    return extracted;
                 }
             }
 
@@ -65,5 +55,21 @@ public class n8nservice {
             e.printStackTrace();
             return "Error calling n8n Agent: " + e.getMessage();
         }
+    }
+
+    private String extractJsonField(String rawResponse) {
+        try {
+            org.springframework.boot.json.JsonParser parser = org.springframework.boot.json.JsonParserFactory.getJsonParser();
+            Map<String, Object> jsonMap = parser.parseMap(rawResponse);
+            
+            if (jsonMap.containsKey("output")) {
+                return String.valueOf(jsonMap.get("output"));
+            } else if (jsonMap.containsKey("text")) {
+                return String.valueOf(jsonMap.get("text"));
+            }
+        } catch (Exception e) {
+            // Ignored: fallback to returning raw string
+        }
+        return null;
     }
 }

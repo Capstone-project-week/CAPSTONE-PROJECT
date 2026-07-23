@@ -24,7 +24,9 @@ public class Story {
     
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    public Story() {}
+    public Story() {
+        // Default constructor required by JPA
+    }
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }

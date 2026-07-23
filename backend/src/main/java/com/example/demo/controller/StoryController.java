@@ -47,23 +47,23 @@ public class StoryController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getUserStories(@RequestHeader(value = "Authorization", required = false) String authHeader) {
+    public ResponseEntity<Object> getUserStories(@RequestHeader(value = "Authorization", required = false) String authHeader) {
         Login user = getAuthenticatedUser(authHeader);
         if (user == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
         }
 
         List<Story> stories = storyRepository.findByUserId(user.getId());
-        List<StoryDto> dtos = stories.stream().map(this::convertToDto).collect(Collectors.toList());
+        List<StoryDto> dtos = stories.stream().map(this::convertToDto).toList();
         
         return ResponseEntity.ok(dtos);
     }
 
     @Autowired
-    private com.example.demo.service.n8nservice n8nService;
+    private com.example.demo.service.N8nService n8nService;
 
     @PostMapping
-    public ResponseEntity<?> createStory(@RequestHeader(value = "Authorization", required = false) String authHeader, @RequestBody StoryDto request) {
+    public ResponseEntity<Object> createStory(@RequestHeader(value = "Authorization", required = false) String authHeader, @RequestBody StoryDto request) {
         Login user = getAuthenticatedUser(authHeader);
         if (user == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");

@@ -10,7 +10,9 @@ public class StoryDto {
     private LocalDateTime createdAt;
     private Long userId;
 
-    public StoryDto() {}
+    public StoryDto() {
+        // Default constructor required for framework
+    }
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }

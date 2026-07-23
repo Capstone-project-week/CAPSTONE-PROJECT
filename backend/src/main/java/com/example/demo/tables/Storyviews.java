@@ -4,48 +4,57 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Column;
 
 @Entity
 public class Storyviews {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private Long story_id;
-	private Long user_id;
-	private Long Likecount;
+	
+	@Column(name = "story_id")
+	private Long storyId;
+	
+	@Column(name = "user_id")
+	private Long userId;
+	
+	@Column(name = "likecount")
+	private Long likeCount;
+
 	public Long getId() {
 		return id;
 	}
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public Long getStory_id() {
-		return story_id;
+	public Long getStoryId() {
+		return storyId;
 	}
-	public void setStory_id(Long story_id) {
-		this.story_id = story_id;
+	public void setStoryId(Long storyId) {
+		this.storyId = storyId;
 	}
-	public Long getUser_id() {
-		return user_id;
+	public Long getUserId() {
+		return userId;
 	}
-	public void setUser_id(Long user_id) {
-		this.user_id = user_id;
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
-	public Long getLikecount() {
-		return Likecount;
+	public Long getLikeCount() {
+		return likeCount;
 	}
-	public void setLikecount(Long likecount) {
-		Likecount = likecount;
+	public void setLikeCount(Long likeCount) {
+		this.likeCount = likeCount;
 	}
-	public Storyviews(Long id, Long story_id, Long user_id, Long likecount) {
+	
+	public Storyviews(Long id, Long storyId, Long userId, Long likeCount) {
 		super();
 		this.id = id;
-		this.story_id = story_id;
-		this.user_id = user_id;
-		Likecount = likecount;
+		this.storyId = storyId;
+		this.userId = userId;
+		this.likeCount = likeCount;
 	}
+	
 	public Storyviews() {
 		super();
 	}
-
 }

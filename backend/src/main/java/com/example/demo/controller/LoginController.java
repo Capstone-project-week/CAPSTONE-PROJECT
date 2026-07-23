@@ -22,7 +22,7 @@ public class LoginController {
     private JwtUtil jwtUtil;
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody Login login) {
+    public ResponseEntity<Object> register(@RequestBody Login login) {
         // Plain text password for simplicity without JWT/Security
         login.setConfirmpassword(login.getPassword());
         Login savedUser = service.register(login);
@@ -33,7 +33,7 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody AuthRequest request) {
+    public ResponseEntity<Object> login(@RequestBody AuthRequest request) {
         Login user = service.getUserByEmail(request.getEmail());
         
         if (user != null && user.getPassword().equals(request.getPassword())) {
