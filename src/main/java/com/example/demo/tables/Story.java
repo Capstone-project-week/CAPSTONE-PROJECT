@@ -15,7 +15,8 @@ public class Story {
     @Column(columnDefinition = "TEXT")
     private String prompt;
     
-    @Column(columnDefinition = "TEXT")
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
     private String content;
     
     @ManyToOne(fetch = FetchType.LAZY)
