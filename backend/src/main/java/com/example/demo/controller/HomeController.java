@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HomeController {
 
-    @GetMapping("/")
+    @GetMapping("/api/home")
     public String home() {
         return "Welcome to the StoryGen API! The backend is running successfully. Please use /api/v1/ endpoints.";
     }
