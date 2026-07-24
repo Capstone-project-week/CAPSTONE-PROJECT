@@ -1,4 +1,6 @@
 package com.example.demo.service;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -11,59 +13,36 @@ import java.util.Map;
 @Service
 public class n8nservice {
 
-
-
-
-
-
-
-    private static final String N8N_WEBHOOK_URL = "https://sakethallada.app.n8n.cloud/webhook/Storyorchestrator";
+    @Value("${n8n.webhook.url:https://srisaketh.app.n8n.cloud/webhook/Storyorchestrator}")
+    private String n8nWebhookUrl;
 
     public String generateText(String prompt) {
+
         try {
             RestTemplate restTemplate = new RestTemplate();
+
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
 
             Map<String, Object> requestBody = new HashMap<>();
-            requestBody.put("chatInput", prompt);
+            requestBody.put("storyId", "1");
+            requestBody.put("playerId", "player001");
+            requestBody.put("userPrompt", prompt);
 
-            HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
+            HttpEntity<Map<String, Object>> entity =
+                    new HttpEntity<>(requestBody, headers);
 
-            
-            String rawResponse = restTemplate.postForObject(N8N_WEBHOOK_URL, entity, String.class);
-            
-            if (rawResponse == null || rawResponse.trim().isEmpty()) {
-                return "N8n Agent triggered successfully but returned an empty response. You might need to check your workflow configuration.";
-            }
+            String response = restTemplate.postForObject(
+                    n8nWebhookUrl,
+                    entity,
+                    String.class
+            );
 
-            
-            if (rawResponse.trim().startsWith("{")) {
-                try {
-                    
-                    org.springframework.boot.json.JsonParser parser = org.springframework.boot.json.JsonParserFactory.getJsonParser();
-                    Map<String, Object> jsonMap = parser.parseMap(rawResponse);
-                    
-                    if (jsonMap.containsKey("output")) {
-                        return String.valueOf(jsonMap.get("output"));
-                    } else if (jsonMap.containsKey("text")) {
-                        return String.valueOf(jsonMap.get("text"));
-                    }
-                } catch (Exception e) {
-                    
-                }
-            }
+            return response;
 
-          
-            if (rawResponse.startsWith("\"") && rawResponse.endsWith("\"")) {
-                rawResponse = rawResponse.substring(1, rawResponse.length() - 1);
-            }
-            
-            return rawResponse;
-            
         } catch (Exception e) {
             e.printStackTrace();
-            return "Error calling n8n Agent: " + e.getMessage();
+            return "Error calling n8n webhook: " + e.getMessage();
         }
     }
 }
