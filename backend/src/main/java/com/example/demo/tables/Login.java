@@ -12,7 +12,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 @Entity
-
+@jakarta.persistence.Table(name = "app_user")
 public class Login {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
