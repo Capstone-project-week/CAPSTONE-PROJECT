@@ -23,11 +23,10 @@ public class LoginController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody Login login) {
-        // Plain text password for simplicity without JWT/Security
+        
         login.setConfirmpassword(login.getPassword());
         Login savedUser = service.register(login);
         
-        // Real JWT token
         String jwtToken = jwtUtil.generateToken(savedUser.getId());
         return ResponseEntity.ok(new AuthResponse(jwtToken, savedUser.getId(), savedUser.getUsername(), savedUser.getEmail()));
     }
@@ -37,7 +36,7 @@ public class LoginController {
         Login user = service.getUserByEmail(request.getEmail());
         
         if (user != null && user.getPassword().equals(request.getPassword())) {
-            // Real JWT token
+           
             String jwtToken = jwtUtil.generateToken(user.getId());
             return ResponseEntity.ok(new AuthResponse(jwtToken, user.getId(), user.getUsername(), user.getEmail()));
         }
