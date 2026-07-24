@@ -19,14 +19,16 @@ public class N8nService {
 
     private static final String N8N_WEBHOOK_URL = "https://sakethallada.app.n8n.cloud/webhook/Storyorchestrator";
 
-    public String generateText(String prompt) {
+    public String generateText(String storyId, String playerId, String prompt) {
         try {
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
 
             Map<String, Object> requestBody = new HashMap<>();
-            requestBody.put("chatInput", prompt);
+            requestBody.put("storyId", storyId);
+            requestBody.put("playerId", playerId);
+            requestBody.put("userPrompt", prompt);
 
             HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
 

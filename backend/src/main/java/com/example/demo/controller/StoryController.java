@@ -73,7 +73,7 @@ public class StoryController {
         
         String content = request.getContent();
         if (content == null || content.trim().isEmpty()) {
-            content = n8nService.generateText(request.getPrompt());
+            content = n8nService.generateText("story_new", "user_" + user.getId(), request.getPrompt());
         }
         story.setContent(content);
         
@@ -87,12 +87,19 @@ public class StoryController {
 
     @PostMapping("/chat")
     public ResponseEntity<Object> chatWithAi(@RequestBody java.util.Map<String, String> request) {
-        String prompt = request.get("chatInput");
+        String prompt = request.get("userPrompt");
         if (prompt == null || prompt.trim().isEmpty()) {
-            return ResponseEntity.badRequest().body("chatInput is required");
+            // fallback for backward compatibility
+            prompt = request.get("chatInput");
+        }
+        if (prompt == null || prompt.trim().isEmpty()) {
+            return ResponseEntity.badRequest().body("userPrompt is required");
         }
         
-        String response = n8nService.generateText(prompt);
+        String storyId = request.getOrDefault("storyId", "story_" + System.currentTimeMillis());
+        String playerId = request.getOrDefault("playerId", "player_001");
+        
+        String response = n8nService.generateText(storyId, playerId, prompt);
         return ResponseEntity.ok(java.util.Map.of("output", response));
     }
 

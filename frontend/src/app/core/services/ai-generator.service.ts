@@ -18,7 +18,11 @@ export class AiGeneratorService {
   constructor(private http: HttpClient) { }
 
   generateStory(prompt: string): Observable<AiResponse> {
-    const payload = { chatInput: prompt };
+    const payload = { 
+      storyId: "story003", 
+      playerId: "player001",
+      userPrompt: prompt 
+    };
 
     return this.http.post<any>(this.apiUrl, payload).pipe(
       map(response => {
