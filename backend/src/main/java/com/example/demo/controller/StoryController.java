@@ -85,6 +85,17 @@ public class StoryController {
         return ResponseEntity.ok(convertToDto(savedStory));
     }
 
+    @PostMapping("/chat")
+    public ResponseEntity<Object> chatWithAi(@RequestBody java.util.Map<String, String> request) {
+        String prompt = request.get("chatInput");
+        if (prompt == null || prompt.trim().isEmpty()) {
+            return ResponseEntity.badRequest().body("chatInput is required");
+        }
+        
+        String response = n8nService.generateText(prompt);
+        return ResponseEntity.ok(java.util.Map.of("output", response));
+    }
+
     private StoryDto convertToDto(Story story) {
         StoryDto dto = new StoryDto();
         dto.setId(story.getId());
